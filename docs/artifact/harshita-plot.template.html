@@ -1044,18 +1044,28 @@ addEventListener('keydown', e => {
 // ── Saving: the design is one shared record, so tuning it here tunes it for everyone ──
 let db = null, canSave = false, saveT = 0, savedAt = null, saveMode = 'local';
 const DOC = 'design/current';
+// The page's code owns the content (titles, lines, pictures, case studies). A saved record only
+// carries what the editor tunes: settings, where each point sits, its verticals, points the owner
+// added, and points the owner removed — so an old record can't bring back old content.
+const CONTENT_VERSION = 2;
+let REMOVED = new Set();
 function load(data) {
   if (!data) return;
   if (data.settings) S = { ...clone(DEFAULTS), ...data.settings };
-  if (Array.isArray(data.points) && data.points.length) {
-    // Pictures stay in the page; the record holds words and positions.
-    const media = Object.fromEntries(DEFAULT_POINTS.map(p => [p.id, { img: p.img, sheet: p.sheet }]));
-    POINTS = data.points.map(p => ({ ...p, ...(media[p.id] || {}) }));
-    const known = new Set(data.known || data.points.map(p => p.id));
-    DEFAULT_POINTS.forEach(p => { if (!known.has(p.id)) POINTS.push(clone(p)); });
-  }
+  REMOVED = new Set(data.removed || []);
+  const sameContent = data.contentVersion === CONTENT_VERSION;
+  const saved = sameContent ? Object.fromEntries((data.points || []).map(p => [p.id, p])) : {};
+  const defaultIds = new Set(DEFAULT_POINTS.map(p => p.id));
+  POINTS = DEFAULT_POINTS.filter(p => !REMOVED.has(p.id)).map(p => {
+    const s = saved[p.id];
+    if (!s) return clone(p);
+    const keep = { x: s.x, y: s.y, v: s.v || p.v };
+    if (sameContent) ['title', 'line', 'meta', 'year'].forEach(k => { if (s[k] != null) keep[k] = s[k]; });
+    return { ...clone(p), ...keep };
+  });
+  if (sameContent) (data.points || []).forEach(p => { if (!defaultIds.has(p.id) && /^p[0-9a-z]+$/.test(p.id)) POINTS.push(p); });
 }
-const record = () => ({ settings: S, points: POINTS.map(({ img, sheet, ...rest }) => rest), known: [...new Set([...DEFAULT_POINTS, ...POINTS].map(p => p.id))], savedAt: Date.now() });
+const record = () => ({ settings: S, points: POINTS.map(({ id, title, line, meta, year, x, y, v }) => ({ id, title, line, meta, year, x, y, v })), removed: [...REMOVED], contentVersion: CONTENT_VERSION, savedAt: Date.now() });
 function persist() {
   clearTimeout(saveT);
   setStatus('saving…');
@@ -1144,9 +1154,10 @@ function wireEditor() {
       POINTS.push({ id, title: 'A new thing', meta: 'where · when', year: '', line: 'one line about it.', x: 0.45, y: -0.45, v: [] });
       selected = id; rerender(); buildEditor(); persist();
     } else if (a === '_delete') {
+      if (DEFAULT_POINTS.some(p => p.id === selected)) REMOVED.add(selected);
       POINTS = POINTS.filter(p => p.id !== selected); selected = null; rerender(); buildEditor(); persist();
     } else if (a === '_reset') {
-      if (b.dataset.armed) { S = clone(DEFAULTS); POINTS = clone(DEFAULT_POINTS); selected = null; rerender(); buildEditor(); persist(); }
+      if (b.dataset.armed) { S = clone(DEFAULTS); POINTS = clone(DEFAULT_POINTS); REMOVED = new Set(); selected = null; rerender(); buildEditor(); persist(); }
       else { b.dataset.armed = '1'; b.textContent = 'press again to reset everything'; setTimeout(() => { delete b.dataset.armed; b.textContent = 'reset to defaults'; }, 3000); }
     } else if (a === '_copy') {
       const json = JSON.stringify({ settings: S, points: POINTS.map(({ img, sheet, ...r }) => r) }, null, 2);
