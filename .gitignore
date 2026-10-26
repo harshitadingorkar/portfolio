@@ -19,3 +19,12 @@ out/
 
 # debug
 npm-debug.log*
+
+# local browser-test output
+.playwright-mcp/
+
+# iCloud placeholders and TypeScript build info
+*.icloud
+tsconfig.tsbuildinfo
+# built artifact (rebuild with docs/artifact/build.py)
+docs/artifact/harshita-plot.html

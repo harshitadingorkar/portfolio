@@ -104,9 +104,7 @@ export default function SiteVoice() {
   const pathname = usePathname()
   const caseId   = CASE_IDS[pathname] ?? null
 
-  // Light text on the blue Unicorn canvas (homepage), dark grey on case study light backgrounds
-  const isWorkPage = pathname.startsWith('/work/')
-  const msgColor   = isWorkPage ? '#5c5852' : 'rgba(255,255,255,0.65)'
+  const msgColor = 'var(--ink-muted)'
 
   const INITIAL_DELAY = 3_000
 
@@ -480,23 +478,24 @@ export default function SiteVoice() {
         <div
           style={{
             position: 'fixed',
-            bottom: '32px',
-            left: '52px',
+            bottom: '28px',
+            left: '40px',
             zIndex: 20,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'baseline',
             gap: '8px',
             pointerEvents: 'none',
+            // It floats over the plot, so it carries its own patch of paper.
+            background: 'var(--bg)',
+            padding: '4px 10px 4px 0',
           }}
         >
-          <svg width="6" height="6" viewBox="0 0 6 6" fill="none" style={{ flexShrink: 0 }}>
-            <circle cx="3" cy="3" r="3" fill="#c84b2f" />
-          </svg>
+          <span aria-hidden style={{ fontFamily: 'var(--font-courier)', fontSize: '11px', color: 'var(--ink-faint)' }}>↳</span>
           <div
             ref={wrapperRef}
             style={{
               filter: 'url(#voice-dissolve)',
-              fontFamily: 'var(--font-ibm-plex-mono)',
+              fontFamily: 'var(--font-courier)',
               fontSize: '11px',
               color: msgColor,
               letterSpacing: '0.04em',

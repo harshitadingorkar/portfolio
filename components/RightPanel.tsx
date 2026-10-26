@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { type HoverState } from '@/components/HoverImages'
+import { entryById } from '@/lib/entries'
 
 function BackArrowIcon() {
   return (
@@ -38,7 +39,7 @@ interface ProjectData {
 const PROJECT_INFO: Record<string, ProjectData> = {
   influence: {
     title: 'Influence Graph',
-    type: 'PRODUCT DESIGN · SALESLOFT · 2024',
+    type: 'PRODUCT DESIGN · SALESLOFT · 2025',
     role: 'Lead Product Designer',
     description: 'AI-powered relationship intelligence for enterprise sales. Surfaces hidden connection paths between sellers and buyers across an entire organisation.',
     details: {
@@ -59,7 +60,7 @@ const PROJECT_INFO: Record<string, ProjectData> = {
   },
   ai_email: {
     title: 'AI Email Assistant',
-    type: 'PRODUCT DESIGN · SALESLOFT · 2023',
+    type: 'PRODUCT DESIGN · SALESLOFT · 2025',
     role: 'Lead Product Designer',
     description: 'Generative email with built-in explainability. Reps build intuition instead of just clicking accept.',
     details: {
@@ -79,7 +80,7 @@ const PROJECT_INFO: Record<string, ProjectData> = {
     route: '/work/ai-email-assistant', cta: 'View case study →',
   },
   github: {
-    title: 'GitHub Pull Requests',
+    title: 'GitHub usability study',
     type: 'UX RESEARCH · GITHUB · 2024',
     role: 'Graduate Product Designer',
     description: 'Code review UX research across 50M+ developers. Uncovered an accessibility paradox that would have shipped to production.',
@@ -100,10 +101,10 @@ const PROJECT_INFO: Record<string, ProjectData> = {
     route: '/work/github', cta: 'View case study →',
   },
   sony: {
-    title: 'Sony Audio',
-    type: 'PRODUCT DESIGN · SONY · 2023',
+    title: 'Sony capstone',
+    type: 'PRODUCT DESIGN · SONY · UW CAPSTONE',
     role: 'UX Designer',
-    description: 'Hardware-software interaction design for audio onboarding. Bridging physical product and digital experience.',
+    description: 'Sonia, an AI assistant for Sony devices, that asks before it learns — data consent designed as a slider from "No, thank you" to "Yes, do it all".',
     details: {
       problem: 'Sony\'s premium headphone onboarding failed to connect the physical unboxing moment to the digital setup experience — users arrived in the app already frustrated.',
       contribution: 'Consumer research and interaction design for the setup flow. Mapped the full journey from box opening to first successful playback and redesigned the critical drop-off points.',
@@ -154,7 +155,7 @@ function AccordionRow({ label, open, onToggle, children, onSectionHover, onSecti
         }}
       >
         <span style={{
-          fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '9.5px',
+          fontFamily: 'var(--font-courier)', fontSize: '9.5px',
           letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--ink)',
         }}>
           {label}
@@ -165,7 +166,7 @@ function AccordionRow({ label, open, onToggle, children, onSectionHover, onSecti
       <div style={{
         display: 'grid',
         gridTemplateRows: open ? '1fr' : '0fr',
-        transition: 'grid-template-rows 360ms cubic-bezier(0.25,0,0.25,1)',
+        transition: 'grid-template-rows 0.55s cubic-bezier(.22,1,.36,1)',
         overflow: 'hidden',
       }}>
         <div style={{ minHeight: 0 }}>
@@ -278,7 +279,7 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
         <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
           <circle cx="3" cy="3" r="3" fill="var(--accent)" />
         </svg>
-        <span style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink)' }}>
+        <span style={{ fontFamily: 'var(--font-courier)', fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink)' }}>
           Index
         </span>
       </div>
@@ -321,33 +322,33 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
             style={{ ...cardStyle, overflowY: 'auto', maxHeight: 'calc(100vh - 48px)' }}
           >
             {/* INDEX header */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 0.525 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
             >
               {indexHeader(false)}
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 0.6 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.19 }}
             >
               <HR />
             </motion.div>
 
             {/* Bio — collapses entirely when any accordion opens */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 0.85 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.26 }}
             >
               <div style={{
                 display: 'grid',
                 gridTemplateRows: blurbVisible ? '1fr' : '0fr',
-                transition: `grid-template-rows 360ms cubic-bezier(0.25,0,0.25,1)`,
+                transition: `grid-template-rows 0.55s cubic-bezier(.22,1,.36,1)`,
                 overflow: 'hidden',
               }}>
                 <div style={{ minHeight: 0 }}>
@@ -356,10 +357,10 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                     transition: `opacity ${blurbVisible ? '200ms' : '100ms'} ease ${blurbVisible ? '160ms' : '0ms'}`,
                   }}>
                     <div style={{ padding: '12px 16px 10px' }}>
-                      <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.8 }}>
-                        Harshita is a Product designer, researcher. Her work lies at the intersection of careful observation and AI systems.
+                      <p style={{ fontFamily: 'var(--font-serif)', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.8 }}>
+                        Harshita is a product designer and researcher. Her work sits where careful observation meets AI systems.
                       </p>
-                      <p style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '9px', color: 'var(--ink-faint)', lineHeight: 1.6, letterSpacing: '0.02em', marginTop: '8px' }}>
+                      <p style={{ fontFamily: 'var(--font-courier)', fontSize: '9px', color: 'var(--ink-faint)', lineHeight: 1.6, letterSpacing: '0.02em', marginTop: '8px' }}>
                         Currently: Product Designer at Salesloft
                       </p>
                     </div>
@@ -371,8 +372,8 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
 
             {/* WORK */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 1.175 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.33 }}
             >
               <AccordionRow
                 label="Work" open={openAccordion === 'work'}
@@ -401,22 +402,41 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                       }}
                       style={{ display: 'block', width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '7px 16px 6px', textAlign: 'left' }}
                     >
-                      <span style={{ display: 'block', fontFamily: 'var(--font-manrope), sans-serif', fontSize: '11.5px', color: 'var(--ink-muted)', transition: 'color 0.15s ease', marginBottom: '2px' }}>
+                      <span style={{ display: 'block', fontFamily: 'var(--font-serif)', fontSize: '11.5px', color: 'var(--ink-muted)', transition: 'color 0.15s ease', marginBottom: '2px' }}>
                         {p.title}
                       </span>
-                      <span style={{ display: 'block', fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '9px', color: 'var(--ink-faint)', letterSpacing: '0.02em', lineHeight: 1.5 }}>
-                        {p.shortDesc}
+                      <span style={{ display: 'block', fontFamily: 'var(--font-courier)', fontSize: '9.5px', color: 'var(--ink-faint)', letterSpacing: '0.01em', lineHeight: 1.5 }}>
+                        {entryById(id)?.line ?? p.shortDesc}
                       </span>
                     </button>
                   ))}
+                  {/* Earlier work without a case study yet — hover still shows its plate */}
+                  {['hpe', 'nutanix'].map(id => {
+                    const e = entryById(id)!
+                    return (
+                      <div
+                        key={id}
+                        onMouseEnter={() => onHoverChange?.({ type: 'project', id })}
+                        onMouseLeave={() => onHoverChange?.({ type: 'work' })}
+                        style={{ padding: '7px 16px 6px' }}
+                      >
+                        <span style={{ display: 'block', fontFamily: 'var(--font-serif)', fontSize: '11.5px', color: 'var(--ink-muted)', marginBottom: '2px' }}>
+                          {e.title} <span style={{ fontFamily: 'var(--font-courier)', fontSize: '9px', color: 'var(--ink-faint)' }}>· {e.meta}</span>
+                        </span>
+                        <span style={{ display: 'block', fontFamily: 'var(--font-courier)', fontSize: '9.5px', color: 'var(--ink-faint)', letterSpacing: '0.01em', lineHeight: 1.5 }}>
+                          {e.line}
+                        </span>
+                      </div>
+                    )
+                  })}
                 </div>
               </AccordionRow>
             </motion.div>
 
             {/* EXPERIENCE */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 1.5 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
             >
               <AccordionRow
                 label="Experience" open={openAccordion === 'experience'}
@@ -425,10 +445,10 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                 <div style={{ padding: '4px 0 10px' }}>
                   {EXPERIENCE.map((item, i) => (
                     <div key={i} style={{ padding: '6px 16px 5px' }}>
-                      <span style={{ display: 'block', fontFamily: 'var(--font-manrope), sans-serif', fontSize: '11px', color: 'var(--ink-muted)', lineHeight: 1.5 }}>
+                      <span style={{ display: 'block', fontFamily: 'var(--font-serif)', fontSize: '11px', color: 'var(--ink-muted)', lineHeight: 1.5 }}>
                         {item.role}
                       </span>
-                      <span style={{ display: 'block', fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '9px', color: 'var(--ink-faint)', letterSpacing: '0.02em', lineHeight: 1.5 }}>
+                      <span style={{ display: 'block', fontFamily: 'var(--font-courier)', fontSize: '9px', color: 'var(--ink-faint)', letterSpacing: '0.02em', lineHeight: 1.5 }}>
                         {item.company} · {item.period}
                       </span>
                     </div>
@@ -439,8 +459,8 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
 
             {/* EXPLORATIONS */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 1.825 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.47 }}
             >
               <AccordionRow
                 label="Explorations" open={openAccordion === 'explorations'}
@@ -448,18 +468,33 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                 onSectionHover={() => onHoverChange?.({ type: 'explorations' })}
                 onSectionHoverEnd={() => { if (!devEditMode) onHoverChange?.(null) }}
               >
-                <div style={{ padding: '10px 16px 14px' }}>
-                  <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.75 }}>
-                    Side projects, experiments, visual notes and things built for curiosity.
-                  </p>
+                <div style={{ padding: '4px 0 10px' }}>
+                  {['patronus', 'sitevoice'].map(id => {
+                    const e = entryById(id)!
+                    return (
+                      <div
+                        key={id}
+                        onMouseEnter={() => onHoverChange?.({ type: 'project', id })}
+                        onMouseLeave={() => onHoverChange?.({ type: 'explorations' })}
+                        style={{ padding: '7px 16px 6px' }}
+                      >
+                        <span style={{ display: 'block', fontFamily: 'var(--font-serif)', fontSize: '11.5px', color: 'var(--ink-muted)', marginBottom: '2px' }}>
+                          {e.title} <span style={{ fontFamily: 'var(--font-courier)', fontSize: '9px', color: 'var(--ink-faint)' }}>· {e.meta}</span>
+                        </span>
+                        <span style={{ display: 'block', fontFamily: 'var(--font-courier)', fontSize: '9.5px', color: 'var(--ink-faint)', letterSpacing: '0.01em', lineHeight: 1.5 }}>
+                          {e.line}
+                        </span>
+                      </div>
+                    )
+                  })}
                 </div>
               </AccordionRow>
             </motion.div>
 
             {/* ABOUT */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 2.15 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.54 }}
             >
               <AccordionRow
                 label="About" open={openAccordion === 'about'}
@@ -468,17 +503,20 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                 onSectionHoverEnd={() => { if (!devEditMode) onHoverChange?.(null) }}
               >
                 <div style={{ padding: '10px 16px 14px' }}>
-                  <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.8 }}>
-                    [ABOUT_TEXT]
+                  <p style={{ fontFamily: 'var(--font-serif)', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.8 }}>
+                    Product designer at Salesloft, after GitHub, an M.S. in Human Centered Design &amp; Engineering at the University of Washington, and years building automation at HPE.
                   </p>
+                  <a href="/about" style={{ display: 'inline-block', marginTop: '8px', fontFamily: 'var(--font-courier)', fontSize: '10.5px', color: 'var(--ink)', textUnderlineOffset: '3px' }}>
+                    more about her →
+                  </a>
                 </div>
               </AccordionRow>
             </motion.div>
 
             {/* CONTACT */}
             <motion.div
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0, 0, 1], delay: 2.475 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.61 }}
             >
               <AccordionRow
                 label="Contact" open={openAccordion === 'contact'}
@@ -486,10 +524,10 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                 noBottomDivider
               >
                 <div style={{ padding: '10px 16px 14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <a href="mailto:hello@harshitashyale.com" style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '12px', color: 'var(--ink-muted)', textDecoration: 'none' }}>
+                  <a href="mailto:hello@harshitashyale.com" style={{ fontFamily: 'var(--font-serif)', fontSize: '12px', color: 'var(--ink-muted)', textDecoration: 'none' }}>
                     hello@harshitashyale.com
                   </a>
-                  <a href="https://linkedin.com/in/harshitashyale" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '12px', color: 'var(--ink-muted)', textDecoration: 'none' }}>
+                  <a href="https://linkedin.com/in/harshitashyale" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-serif)', fontSize: '12px', color: 'var(--ink-muted)', textDecoration: 'none' }}>
                     linkedin.com/in/harshitashyale
                   </a>
                 </div>
@@ -504,7 +542,7 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
           {expanded && proj && (
             <motion.div
               key={`proj-${expanded}`}
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.22, ease: 'easeOut' }}
               style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
             >
@@ -522,13 +560,13 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                     <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
                       <rect width="7" height="7" fill="var(--ink-faint)" />
                     </svg>
-                    <span style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink)' }}>
+                    <span style={{ fontFamily: 'var(--font-courier)', fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink)' }}>
                       Work
                     </span>
                   </div>
                   <button
                     onClick={handleCollapse}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '12px', padding: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontFamily: 'var(--font-courier)', fontSize: '12px', padding: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}
                     aria-label="Close"
                   >
                     ×
@@ -538,16 +576,16 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
 
                 {/* Title block */}
                 <div style={{ padding: '14px 16px 14px' }}>
-                  <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '16px', fontWeight: 500, color: 'var(--ink)', lineHeight: 1.2, marginBottom: '6px' }}>
+                  <p style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 400, color: 'var(--ink)', lineHeight: 1.2, marginBottom: '6px' }}>
                     {proj.title}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '8.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-faint)', marginBottom: '2px' }}>
+                  <p style={{ fontFamily: 'var(--font-courier)', fontSize: '8.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-faint)', marginBottom: '2px' }}>
                     {proj.type}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '8.5px', letterSpacing: '0.05em', color: 'var(--ink-faint)', marginBottom: '12px' }}>
+                  <p style={{ fontFamily: 'var(--font-courier)', fontSize: '8.5px', letterSpacing: '0.05em', color: 'var(--ink-faint)', marginBottom: '12px' }}>
                     {proj.role}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.8 }}>
+                  <p style={{ fontFamily: 'var(--font-serif)', fontSize: '12px', color: 'var(--ink-muted)', lineHeight: 1.8 }}>
                     {proj.description}
                   </p>
                 </div>
@@ -562,19 +600,19 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                       { heading: 'Key decisions', body: proj.details.decisions    },
                     ].map(({ heading, body }) => (
                       <div key={heading} style={{ marginBottom: '12px' }}>
-                        <p style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ink-faint)', marginBottom: '4px' }}>
+                        <p style={{ fontFamily: 'var(--font-courier)', fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ink-faint)', marginBottom: '4px' }}>
                           {heading}
                         </p>
-                        <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '11.5px', color: 'var(--ink-muted)', lineHeight: 1.75 }}>
+                        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '11.5px', color: 'var(--ink-muted)', lineHeight: 1.75 }}>
                           {body}
                         </p>
                       </div>
                     ))}
                     <div style={{ display: 'flex', gap: '20px', marginTop: '4px' }}>
-                      {proj.details.metrics.map((m, i) => (
+                      {proj.details.metrics.filter(m => m.value !== '—').map((m, i) => (
                         <div key={i}>
-                          <p style={{ fontFamily: 'var(--font-manrope), sans-serif', fontSize: '20px', fontWeight: 500, color: 'var(--ink)', lineHeight: 1 }}>{m.value}</p>
-                          <p style={{ fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '8.5px', color: 'var(--ink-faint)', marginTop: '3px', letterSpacing: '0.04em' }}>{m.label}</p>
+                          <p style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', fontWeight: 400, color: 'var(--ink)', lineHeight: 1 }}>{m.value}</p>
+                          <p style={{ fontFamily: 'var(--font-courier)', fontSize: '8.5px', color: 'var(--ink-faint)', marginTop: '3px', letterSpacing: '0.04em' }}>{m.label}</p>
                         </div>
                       ))}
                     </div>
@@ -590,7 +628,7 @@ export default function RightPanel({ onHoverChange, onProjectExpand, onNavigate 
                     onMouseLeave={() => setCtaHov(false)}
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                      fontFamily: 'var(--font-ibm-plex-mono)', fontSize: '10px', letterSpacing: '0.1em',
+                      fontFamily: 'var(--font-courier)', fontSize: '10px', letterSpacing: '0.1em',
                       color: ctaHov ? 'var(--accent)' : 'var(--ink-muted)',
                       transition: 'color 0.15s ease',
                     }}

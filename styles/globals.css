@@ -3,15 +3,20 @@
 @tailwind utilities;
 
 /* ── Design tokens ─────────────────────────────── */
+/* Mint — soft, airy, tranquil: a field in early light. The ink leans green so
+   it belongs to the ground; the terracotta accent, deepened to hold contrast
+   on mint, is still the one warm thread through every version of this site. */
 :root {
-  --bg: #c3bcaa;
-  --bg-subtle: #b8b09e;
-  --panel-bg: #ffffff;
-  --ink: #0d0d0d;
-  --ink-muted: #3d3830;
-  --ink-faint: #7a7265;
-  --accent: #c84b2f;
-  --border: #a9a192;
+  --bg: #BCE4C5;
+  --bg-subtle: #ADD9B8;
+  --panel-bg: #F4FAF2;
+  /* One deep green ink, hierarchy by opacity. */
+  --ink: rgba(16, 36, 25, 0.94);
+  --ink-muted: rgba(16, 36, 25, 0.74);   /* ≈5.4:1 on --bg */
+  --ink-faint: rgba(16, 36, 25, 0.57);   /* ≈3.4:1 — labels only */
+  --accent: #A8391F;                     /* ≈4.5:1 on --bg */
+  --border: rgba(16, 36, 25, 0.16);
+  --rule: rgba(16, 36, 25, 0.14);
 }
 
 /* dark mode — disabled for now
@@ -26,31 +31,25 @@
   --border: #2e2c29;
 } */
 
-/* ── Global transitions ─────────────────────────── */
-*,
-*::before,
-*::after {
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-.no-color-transition,
-.no-color-transition *,
-canvas {
-  transition: none !important;
-}
-
 /* ── Base ───────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  background-color: #c3bcaa; /* matches --bg, prevents black flash before CSS vars load */
+  background-color: #BCE4C5; /* matches --bg, prevents a flash before CSS vars load */
 }
 
 body {
   background-color: var(--bg);
   color: var(--ink);
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-serif), Georgia, serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .plot-anim { animation: none !important; }
+}
+
+::selection { background: var(--accent); color: var(--panel-bg); }
 
 /* ── Custom scrollbar ───────────────────────────── */
 ::-webkit-scrollbar {
@@ -66,10 +65,7 @@ body {
 }
 
 /* ── Selection ──────────────────────────────────── */
-::selection {
-  background: var(--accent);
-  color: var(--bg);
-}
+
 
 /* ── Stripe pattern utility ─────────────────────── */
 .stripe-pattern {
@@ -80,12 +76,6 @@ body {
     var(--border) 4px,
     var(--border) 5px
   );
-}
-
-/* ── Hide Unicorn Studio watermark ──────────────── */
-a[href*="unicorn.studio"] {
-  display: none !important;
-  pointer-events: none !important;
 }
 
 

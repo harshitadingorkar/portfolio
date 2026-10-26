@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getOrCreatePatron, hasVisitedBefore, getLastVisit } from '@/lib/patronus'
 
-function greetingMessage(name: string, msSinceLast: number | null): string {
-  if (msSinceLast === null) return ''
+export function greetingMessage(name: string, msSinceLast: number | null): string {
+  if (msSinceLast === null) return `we'll call you ${name}.`
   const h = msSinceLast / 3600000
   const d = msSinceLast / 86400000
   if (h < 1)   return `back so soon, ${name}?`
@@ -23,17 +23,17 @@ export default function PatronGreeting() {
   const [hovered, setHovered]   = useState(false)
 
   useEffect(() => {
-    if (!hasVisitedBefore()) return   // first visit: canvas handles text
-
-    const patron   = getOrCreatePatron()
+    const firstVisit = !hasVisitedBefore()
+    const patron    = getOrCreatePatron()
     const lastVisit = getLastVisit()
-    const msg = greetingMessage(patron.name, lastVisit ? Date.now() - lastVisit : null)
+    const msg = greetingMessage(patron.name, firstVisit ? null : lastVisit ? Date.now() - lastVisit : null)
 
     setName(patron.name)
     setGreeting(msg)
 
+    // First visit lingers a little longer — it's the one introduction that matters.
     const show = setTimeout(() => setVisible(true), 800)
-    const hide = setTimeout(() => setVisible(false), 6800)   // 800 delay + 5s display + 1s fade
+    const hide = setTimeout(() => setVisible(false), firstVisit ? 8800 : 6800)
     return () => { clearTimeout(show); clearTimeout(hide) }
   }, [])
 

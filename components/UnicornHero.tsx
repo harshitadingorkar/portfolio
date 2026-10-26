@@ -5,11 +5,46 @@ import { forwardRef, useEffect, useRef, Component, type ReactNode } from 'react'
 const PROJECT_ID = '68NPqs52HBHIFhXMihRV'
 const SDK_URL    = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.3/dist/unicornStudio.umd.js'
 
+type UnicornStudioGlobal = {
+  init?: () => void
+  destroyScene?: (id: string) => void
+}
+
 // Catch any crash from the third-party scene without killing the page
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() { return { failed: true } }
   render() { return this.state.failed ? null : this.props.children }
+}
+
+// Module-level singleton: the SDK script is appended at most once, and every
+// mounted scene (including React 18 Strict Mode's double-invoke in dev) awaits
+// the SAME promise instead of racing a fresh <script> / onload pair. Appending
+// the script twice, or calling initScene() before window.UnicornStudio exists,
+// silently drops the scene — which is what was happening before this fix.
+let sdkPromise: Promise<UnicornStudioGlobal> | null = null
+
+function loadUnicornSDK(): Promise<UnicornStudioGlobal> {
+  if (sdkPromise) return sdkPromise
+
+  sdkPromise = new Promise((resolve, reject) => {
+    const w = window as unknown as Record<string, unknown>
+    if (w.UnicornStudio) {
+      resolve(w.UnicornStudio as UnicornStudioGlobal)
+      return
+    }
+
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${SDK_URL}"]`)
+    const script = existing ?? document.createElement('script')
+    if (!existing) {
+      script.src = SDK_URL
+      document.head.appendChild(script)
+    }
+    script.addEventListener('load', () => resolve((window as unknown as Record<string, unknown>).UnicornStudio as UnicornStudioGlobal))
+    script.addEventListener('error', () => reject(new Error('Failed to load Unicorn Studio SDK')))
+  })
+
+  return sdkPromise
 }
 
 // Loads Unicorn Studio SDK via script tag and mounts the scene imperatively.
@@ -28,31 +63,24 @@ function UnicornScene() {
 
     let destroyed = false
 
-    function initScene() {
+    loadUnicornSDK().then(US => {
       if (destroyed) return
-      const US = (window as unknown as Record<string, unknown>).UnicornStudio as {
-        isInitialized?: boolean
-        init?: () => void
-      } | undefined
-      if (!US) return
-      if (!US.isInitialized) US.init?.()
-    }
-
-    const existing = document.querySelector<HTMLScriptElement>(`script[src="${SDK_URL}"]`)
-    if (existing) {
-      initScene()
-    } else {
-      const script = document.createElement('script')
-      script.src = SDK_URL
-      script.onload = initScene
-      document.head.appendChild(script)
-    }
+      // Wait a frame so the container has its final laid-out size before the
+      // engine measures it — calling init() mid-layout is what produces a
+      // scene stuck rendering into a small top-left region.
+      requestAnimationFrame(() => {
+        if (destroyed) return
+        // init() re-scans the DOM for any data-us-project element not yet
+        // bound to a scene, so it's safe (and necessary) to call on every mount.
+        US.init?.()
+      })
+    }).catch(() => {
+      // SceneBoundary / silent fallback — a missing hero graphic shouldn't break the page
+    })
 
     return () => {
       destroyed = true
-      const US = (window as unknown as Record<string, unknown>).UnicornStudio as {
-        destroyScene?: (id: string) => void
-      } | undefined
+      const US = (window as unknown as Record<string, unknown>).UnicornStudio as UnicornStudioGlobal | undefined
       US?.destroyScene?.(id)
     }
   }, [])
